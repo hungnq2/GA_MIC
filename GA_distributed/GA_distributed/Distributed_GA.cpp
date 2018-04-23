@@ -695,12 +695,15 @@ void Population::evalNST(int *nst, float* fitness, int* eventStartList, int* eve
     for (int i = 0; i <sizePop; i++ ) {
         float power[numMachine], powerDatacenter = 0;
         int mips[numMachine], cores[numMachine], times[numMachine];
-        #pragma omp parallel for simd
-        for(int j=0; j<numMachine; j++){
-            power[j] = 0;
-            mips[j] = 0;
-            cores[j] = 0;
-        }
+        // #pragma omp parallel for simd
+        // for(int j=0; j<numMachine; j++){
+        //     power[j] = 0;
+        //     mips[j] = 0;
+        //     cores[j] = 0;
+        // }
+        memset(power, 0, numMachine);
+        memset(mips, 0, numMachine);
+        memset(cores, 0, numMachine);
         fitness[i] = 0;
 
         int startPtr = 0, endPtr = 0;       //startPtr and endPtr is 2 pointers for check the lists
