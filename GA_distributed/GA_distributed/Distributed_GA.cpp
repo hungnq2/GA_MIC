@@ -451,8 +451,11 @@ void Population::GA_Evolution(int galoop) {
     int NSToffspring [numTask*sizePop];
     float fitness_offspring[sizePop];
     // create clone
+    /*Hung rem 
     #pragma omp parallel for simd
-    for (int i =0 ; i< sizePop*numTask ; i++) { NSToffspring[i] = mang_NST[i];}
+    for (int i =0 ; i< sizePop*numTask ; i++) { NSToffspring[i] = mang_NST[i];}//use memcpy() instead
+    */
+   memcpy(NSToffspring, mang_NST, sizePop*numTask);
 
 // event list , create for eval
     cout << "Begin create list\n";
@@ -470,8 +473,10 @@ void Population::GA_Evolution(int galoop) {
 // call eval funtion for parents
     evalNST(mang_NST, mang_fitness, startList, endList);
     // clone fitness
-    #pragma omp parallel for simd
-    for (int i =0 ; i< sizePop ; i++) { fitness_offspring[i] = mang_fitness[i];}
+    // Hung has changed to use memcpy() function instead
+    // #pragma omp parallel for simd
+    // for (int i =0 ; i< sizePop ; i++) { fitness_offspring[i] = mang_fitness[i];}//use memcpy() instead
+    memcpy(fitness_offspring, mang_fitness, sizePop);
 
 // begin ga 
     clock_t t;
@@ -875,11 +880,11 @@ int main(int argc, char* argv[]) {
     double avarage_exe_time = 0;
     double avarage_com_time = 0;
 
-    int i;
+    int i;// Run 5 times for accuracy GA's results
     for (i = 0; i < 5; i++) {
         Population P;
         //P.readFile("/opt/share/tu/GA_MIC/GA_distributed/GA_distributed/data.txt");
-	    P.readFile("/opt/share/data.txt");	
+	    P.readFile("data.txt");	
         
         MPI_Barrier(MPI_COMM_WORLD);
         double exe_time = omp_get_wtime();
