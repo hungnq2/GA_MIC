@@ -451,12 +451,9 @@ void Population::GA_Evolution(int galoop) {
     int NSToffspring [numTask*sizePop];
     float fitness_offspring[sizePop];
     // create clone
-    /*Hung rem 
     #pragma omp parallel for simd
-    for (int i =0 ; i< sizePop*numTask ; i++) { NSToffspring[i] = mang_NST[i];}//use memcpy() instead
-    */
-   memcpy(NSToffspring, mang_NST, sizePop*numTask);
-
+    for (int i =0 ; i< sizePop*numTask ; i++) { NSToffspring[i] = mang_NST[i];}
+    
 // event list , create for eval
     cout << "Begin create list\n";
     int startList[numTask * 2], endList[numTask * 2];
@@ -473,11 +470,9 @@ void Population::GA_Evolution(int galoop) {
 // call eval funtion for parents
     evalNST(mang_NST, mang_fitness, startList, endList);
     // clone fitness
-    // Hung has changed to use memcpy() function instead
-    // #pragma omp parallel for simd
-    // for (int i =0 ; i< sizePop ; i++) { fitness_offspring[i] = mang_fitness[i];}//use memcpy() instead
-    memcpy(fitness_offspring, mang_fitness, sizePop);
-
+    #pragma omp parallel for simd
+    for (int i =0 ; i< sizePop ; i++) { fitness_offspring[i] = mang_fitness[i];}//use memcpy() instead
+    
 // begin ga 
     clock_t t;
     t = clock();
@@ -889,7 +884,7 @@ int main(int argc, char* argv[]) {
         //P.readFile("/opt/share/tu/GA_MIC/GA_distributed/GA_distributed/data.txt");
 	    P.readFile("data.txt");	
         
-        MPI_Barrier(MPI_COMM_WORLD);
+        //MPI_Barrier(MPI_COMM_WORLD);// Hung rem
         double exe_time = omp_get_wtime();
         // Execute GA    
         P.GA_Evolution(generation);
@@ -899,7 +894,7 @@ int main(int argc, char* argv[]) {
         cout << "Sols " << best_sol << endl;
         solutions = new float[nprocs];
         
-        MPI_Barrier(MPI_COMM_WORLD);
+        //MPI_Barrier(MPI_COMM_WORLD); // Hung rem
         double com_time = MPI_Wtime();
         MPI_Gather(&best_sol, 1, MPI_FLOAT, solutions, 1, MPI_FLOAT, MASTER, MPI_COMM_WORLD);
         //MPI_Barrier(MPI_COMM_WORLD);

@@ -1,9 +1,3 @@
-/**
-GA tuan tu tren CPU
-	Version 1.0
-	Developer : Le Thanh Tan
-				Chiem Thach Phat
-*/
 #pragma offload_attribute(push, target(mic))
 #include <fstream>
 #include <iostream>
