@@ -701,9 +701,7 @@ void Population::evalNST(int *nst, float* fitness, int* eventStartList, int* eve
             mips[j] = 0;
             cores[j] = 0;
         }
-        // memset(power, 0, numMachine); //DONT used
-        // memset(mips, 0, numMachine);
-        // memset(cores, 0, numMachine);
+        
         fitness[i] = 0;
 
         int startPtr = 0, endPtr = 0;       //startPtr and endPtr is 2 pointers for check the lists
